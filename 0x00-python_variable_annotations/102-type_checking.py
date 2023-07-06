@@ -3,7 +3,7 @@
 necessary changes."""
 
 
-from typing import Mapping, TypeVar, Union, List, Tuple, Any
+from typing import Tuple
 
 
 def zoom_array(lst: Tuple, factor: int = 2) -> Tuple:
