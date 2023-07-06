@@ -3,20 +3,20 @@
 necessary changes."""
 
 
-from typing import List, Any
+from typing import Mapping, TypeVar, Union, List, Tuple, Any
 
 
-def zoom_array(lst: List[Any], factor: int = 2) -> List[Any]:
+def zoom_array(lst: Tuple, factor: int = 2) -> Tuple:
     """Use mypy to validate the following piece of code and apply any
     necessary changes."""
-    zoomed_in: List[Any] = [
+    zoomed_in: Tuple = (
         item for item in lst
         for i in range(factor)
-    ]
+    )
     return zoomed_in
 
 
-array = [12, 72, 91]
+array = (12, 72, 91)
 
 zoom_2x = zoom_array(array)
 
