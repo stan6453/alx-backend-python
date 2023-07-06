@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
-"""Use mypy to validate the following piece of code and apply any
-necessary changes."""
+"""Use mypy to validate the following piece of code
+and apply any necessary changes.
+"""
+
+from typing import Tuple, List, Any
 
 
-from typing import Tuple, List
-
-
-def zoom_array(lst: Tuple, factor: int = 2) -> Tuple:
-    """Use mypy to validate the following piece of code and apply any
-    necessary changes"""
+def zoom_array(lst: Tuple, factor: int = 2) -> List:
+    """Corrected annotations"""
     zoomed_in: List = [
         item for item in lst
         for i in range(factor)
