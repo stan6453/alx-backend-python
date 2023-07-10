@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """execute multiple coroutines at the same time with async """
 
-import asyncio
 import time
+import asyncio
+
 
 wait_n = __import__('1-concurrent_coroutines').wait_n
 
