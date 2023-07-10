@@ -7,8 +7,8 @@ from typing import List, Union, Coroutine
 wait_random = __import__('0-basic_async_syntax').wait_random
 
 
-async def wait_n(n: int, max_delay: int) -> List[Union[int, float]]:
-    results: List[Union[int, float]] = []
+async def wait_n(n: int, max_delay: int) -> List[float]:
+    results: List[float] = []
     coroutines: List[Coroutine] = [add_to_list(n, max_delay, results)
                                    for n in range(n)]
 
@@ -18,6 +18,6 @@ async def wait_n(n: int, max_delay: int) -> List[Union[int, float]]:
 
 
 async def add_to_list(n: int, max_delay: int,
-                      results: List[Union[int, float]]):
+                      results: List[float]):
     delay = await wait_random(max_delay)
     results.append(delay)
