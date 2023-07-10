@@ -3,13 +3,13 @@
 The code is nearly identical to wait_n except task_wait_random is being called."""
 
 import asyncio
-from typing import List, Union, Coroutine
+from typing import List, Coroutine
 
 task_wait_random = __import__('3-tasks').task_wait_random
 
 
-async def task_wait_n(n: int, max_delay: int) -> List[Union[int, float]]:
-    results: List[Union[int, float]] = []
+async def task_wait_n(n: int, max_delay: int) -> List[float]:
+    results: List[float] = []
     coroutines: List[Coroutine] = [add_to_list(n, max_delay, results)
                                    for n in range(n)]
 
@@ -19,6 +19,6 @@ async def task_wait_n(n: int, max_delay: int) -> List[Union[int, float]]:
 
 
 async def add_to_list(n: int, max_delay: int,
-                      results: List[Union[int, float]]):
+                      results: List[float]):
     delay = await task_wait_random(max_delay)
     results.append(delay)
