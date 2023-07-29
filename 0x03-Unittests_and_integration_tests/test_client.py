@@ -85,8 +85,8 @@ class TestGithubOrgClient(unittest.TestCase):
         """TODO: """
         New_org = GithubOrgClient(org_name)
         mock_get_json.return_value = get_json_return_val
-        with patch('client.GithubOrgClient._public_repos_url') as\
-                mock_public_repos_url_fn:
+        with patch('client.GithubOrgClient._public_repos_url',
+                   new_callable=PropertyMock) as mock_public_repos_url_fn:
             mock_public_repos_url_fn.return_value = _public_repos_url_result
             # test when license exists
             expected_result = [
