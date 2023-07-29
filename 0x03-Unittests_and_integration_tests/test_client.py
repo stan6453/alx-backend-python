@@ -17,7 +17,7 @@ from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
-    """TODO: """
+    """Test for GithubOrgClient class"""
 
     ORG_URL = "https://api.github.com/orgs/{org}"
 
@@ -27,7 +27,7 @@ class TestGithubOrgClient(unittest.TestCase):
     ])
     @patch('client.get_json')
     def test_org(self, org_name: str, mock_get_json: MagicMock):
-        """TODO: """
+        """test for GithubOrgClient.org"""
         New_org = GithubOrgClient(org_name)
         New_org.org()
 
@@ -57,7 +57,7 @@ class TestGithubOrgClient(unittest.TestCase):
     def test_public_repos_url(self, org_name: str, org_fun_result: Mapping,
                               _public_repos_url_result,
                               mock_org_fn: MagicMock):
-        """TODO: """
+        """test for GithubOrgClient._public_repos_url."""
         New_org = GithubOrgClient(org_name)
         mock_org_fn.return_value = org_fun_result
         if type(_public_repos_url_result) is str:
@@ -76,13 +76,12 @@ class TestGithubOrgClient(unittest.TestCase):
          "https://api.github.com/orgs/google/repos", ''),
         ("google", TEST_PAYLOAD[0][1],
          "https://api.github.com/orgs/google/repos", None),
-        # ("abc")
     ])
     @patch('client.get_json')
-    def test_public_repos(self, org_name: str, get_json_return_val: list,
+    def test_public_repos(self, org_name: str, get_json_return_val: Sequence,
                           _public_repos_url_result: str, license: str,
                           mock_get_json: MagicMock):
-        """TODO: """
+        """test for GithubOrgClient.public_repos"""
         New_org = GithubOrgClient(org_name)
         mock_get_json.return_value = get_json_return_val
         with patch('client.GithubOrgClient._public_repos_url',
