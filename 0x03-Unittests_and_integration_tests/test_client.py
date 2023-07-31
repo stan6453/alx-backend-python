@@ -4,7 +4,7 @@
 import unittest
 from unittest.mock import patch, MagicMock, PropertyMock
 from client import GithubOrgClient
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 from typing import (
     Mapping,
     Sequence,
@@ -87,7 +87,6 @@ class TestGithubOrgClient(unittest.TestCase):
         with patch('client.GithubOrgClient._public_repos_url',
                    new_callable=PropertyMock) as mock_public_repos_url_fn:
             mock_public_repos_url_fn.return_value = _public_repos_url_result
-            # test when license exists
             expected_result = [
                 repo["name"] for repo in get_json_return_val
                 if license is None or (repo['license'] and
@@ -105,3 +104,45 @@ class TestGithubOrgClient(unittest.TestCase):
     def test_has_license(self, repo: Mapping, license_key: str, test_result):
         result = GithubOrgClient.has_license(repo, license_key)
         self.assertAlmostEqual(result, test_result)
+
+    
+@parameterized_class([
+    {
+        'org_payload': TEST_PAYLOAD[0][0],
+        'repos_payload': TEST_PAYLOAD[0][1],
+        'expected_repos': TEST_PAYLOAD[0][2],
+        'apache2_repos': TEST_PAYLOAD[0][3],
+    },
+])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Integration test for client.GithubOrgClient"""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        route_payload = {
+            'https://api.github.com/orgs/google': cls.org_payload,
+            'https://api.github.com/orgs/google/repos': cls.repos_payload,
+        }
+        def get_payload(url):
+            if url in route_payload:
+                return MagicMock(**{'json.return_value': route_payload[url]})
+            # return HTTPError
+        
+        cls.get_patcher = patch('requests.get', side_effect=get_payload)
+        cls.mock_get = cls.get_patcher.start()
+    
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.get_patcher.stop()
+
+    @parameterized.expand([
+        ('google')
+    ])
+    def test_public_repos(self, org_name):
+        # Create an instance of the GithubOrgClient
+        client = GithubOrgClient(org_name)
+
+        repos = client.public_repos()
+
+        # Assert the results are correct
+        self.assertEqual(repos, self.expected_repos)
