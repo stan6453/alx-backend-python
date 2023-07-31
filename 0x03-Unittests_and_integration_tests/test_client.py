@@ -126,7 +126,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
         def get_payload(url):
             if url in possible_payloads:
-                return MagicMock(**{'json.return_value': possible_payloads[url]})
+                return MagicMock(**{'json.return_value':
+                                    possible_payloads[url]})
 
         cls.get_patcher = patch('requests.get', side_effect=get_payload)
         cls.mock_get = cls.get_patcher.start()
@@ -152,5 +153,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     ])
     def test_public_repos_with_license(self, org_name, license):
         """test if the right private repos are returned"""
-        self.assertEqual(GithubOrgClient(org_name).public_repos(license),
-                         self.apache2_repos)
+        self.assertEqual(
+            GithubOrgClient(org_name).public_repos(license),
+            self.apache2_repos
+        )
