@@ -105,7 +105,7 @@ class TestGithubOrgClient(unittest.TestCase):
         result = GithubOrgClient.has_license(repo, license_key)
         self.assertAlmostEqual(result, test_result)
 
-    
+
 @parameterized_class([
     {
         'org_payload': TEST_PAYLOAD[0][0],
@@ -119,18 +119,18 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        route_payload = {
+        possible_payloads = {
             'https://api.github.com/orgs/google': cls.org_payload,
             'https://api.github.com/orgs/google/repos': cls.repos_payload,
         }
+
         def get_payload(url):
-            if url in route_payload:
-                return MagicMock(**{'json.return_value': route_payload[url]})
-            # return HTTPError
-        
+            if url in possible_payloads:
+                return MagicMock(**{'json.return_value': possible_payloads[url]})
+
         cls.get_patcher = patch('requests.get', side_effect=get_payload)
         cls.mock_get = cls.get_patcher.start()
-    
+
     @classmethod
     def tearDownClass(cls) -> None:
         cls.get_patcher.stop()
@@ -139,10 +139,18 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         ('google')
     ])
     def test_public_repos(self, org_name):
-        # Create an instance of the GithubOrgClient
+        """test if the right repos are returned"""
         client = GithubOrgClient(org_name)
 
         repos = client.public_repos()
 
         # Assert the results are correct
         self.assertEqual(repos, self.expected_repos)
+
+    @parameterized.expand([
+        ('google', 'apache-2.0')
+    ])
+    def test_public_repos_with_license(self, org_name, license):
+        """test if the right private repos are returned"""
+        self.assertEqual(GithubOrgClient(org_name).public_repos(license),
+                         self.apache2_repos)
