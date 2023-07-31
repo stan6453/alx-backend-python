@@ -102,6 +102,7 @@ class TestGithubOrgClient(unittest.TestCase):
         ({"license": {"key": "other_license"}}, "my_license", False)
     ])
     def test_has_license(self, repo: Mapping, license_key: str, test_result):
+        """test if a repo has license"""
         result = GithubOrgClient.has_license(repo, license_key)
         self.assertAlmostEqual(result, test_result)
 
@@ -119,12 +120,14 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
+        """setup text fixtures for test class"""
         possible_payloads = {
             'https://api.github.com/orgs/google': cls.org_payload,
             'https://api.github.com/orgs/google/repos': cls.repos_payload,
         }
 
         def get_payload(url):
+            """return payload for each possible urls"""
             if url in possible_payloads:
                 return MagicMock(**{'json.return_value':
                                     possible_payloads[url]})
@@ -134,6 +137,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls) -> None:
+        """cleanup class before exit"""
         cls.get_patcher.stop()
 
     @parameterized.expand([
